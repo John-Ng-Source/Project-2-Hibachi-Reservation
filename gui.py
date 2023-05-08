@@ -189,9 +189,9 @@ class Ui_MainWindow(object):
         self.label_9 = QtWidgets.QLabel(self.tab_2)
         self.label_9.setGeometry(QtCore.QRect(10, 390, 651, 31))
         self.label_9.setObjectName("label_9")
-        self.edit_res_list = QtWidgets.QListWidget(self.tab_2)
-        self.edit_res_list.setGeometry(QtCore.QRect(0, 0, 351, 211))
-        self.edit_res_list.setObjectName("edit_res_list")
+        self.edit_res_lst = QtWidgets.QListWidget(self.tab_2)
+        self.edit_res_lst.setGeometry(QtCore.QRect(0, 0, 351, 211))
+        self.edit_res_lst.setObjectName("edit_res_list")
         self.label_14 = QtWidgets.QLabel(self.tab_2)
         self.label_14.setGeometry(QtCore.QRect(330, 230, 61, 16))
         self.label_14.setObjectName("label_14")
@@ -279,7 +279,6 @@ class Ui_MainWindow(object):
                 content = csv.reader(csvfile,delimiter =',')
                 for line in content:
                     entry = f'{line[0]}  -  Party Size: {line[1]}  -  Time: {line[2]}'
-                    print(entry)
                     self.curr_res_lst.addItem(entry)
 
 if __name__ == "__main__":
