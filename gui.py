@@ -293,6 +293,7 @@ class Ui_MainWindow(object):
                         entry = f'{line[0]}  -  Party Size: {line[1]}  -  Time: {line[2]}  -  {line[3]}'
                         self.curr_res_lst.addItem(entry)
                         self.new_res_lst.addItem(entry)
+                        self.edit_res_lst.addItem(entry)
 
         
 

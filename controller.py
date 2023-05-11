@@ -35,6 +35,7 @@ class Controller(QMainWindow, Ui_MainWindow):
         self.edit_del_button.clicked.connect(self.del_res)
         self.edit_set_button.clicked.connect(self.set_res)
 
+
     def grab_date_new_res(self):
         self.new_res_lst.clear()
         date_selected = self.new_calender.selectedDate()
@@ -649,8 +650,77 @@ class Controller(QMainWindow, Ui_MainWindow):
                 print('Please Select A Time Slot.')
 
     def del_res(self):
-        pass
+        input_name = self.edit_name.text().strip()
+        input_size = self.edit_size.text().strip()
+        input_phone = self.edit_phone.text().strip()
+        input_time = self.edit_time.text().strip()
+
+        date_selected = self.edit_calender.selectedDate()
+        date = str(date_selected.toString())
+        date_lst = date.split(' ')
+        if int(date_lst[2]) < 10:
+            res_path = f'Reservations/{date_lst[1]}-{str(0)+ date_lst[2]}-{date_lst[3]}.csv'
+            #print(res_path)
+        else:
+            res_path = f'Reservations/{date_lst[1]}-{date_lst[2]}-{date_lst[3]}.csv'
+
+        if os.path.isfile(res_path):
+            lines = []
+            with open(res_path, 'r') as csvfile:
+                content = csv.reader(csvfile,delimiter =',')
+                for line in content:
+                    if line[0] == input_name and line[1] == input_size and line[2] == input_time:
+                        continue
+                    else:
+                        lines.append(line)
+
+            with open(res_path, 'w', newline='') as csvfile:
+                content = csv.writer(csvfile)
+                for line in lines:
+                    content.writerow(line)
+            self.grab_date_edit_res()
+            self.edit_name.setText('')
+            self.edit_size.setText('')
+            self.edit_time.setText('')
+                        
 
     def set_res(self):
-        pass
+        input_name = self.edit_name.text().strip()
+        input_size = self.edit_size.text().strip()
+        input_phone = self.edit_phone.text().strip()
+        input_time = self.edit_time.text().strip()
+
+        new_name = self.edit_new_name.text().strip()
+        new_size = self.edit_new_size.text().strip()
+        new_time = self.edit_new_time.text().strip()
+        new_phone = self.edit_new_number.text().strip()
+
+        date_selected = self.edit_calender.selectedDate()
+        date = str(date_selected.toString())
+        date_lst = date.split(' ')
+        if int(date_lst[2]) < 10:
+            res_path = f'Reservations/{date_lst[1]}-{str(0)+ date_lst[2]}-{date_lst[3]}.csv'
+            #print(res_path)
+        else:
+            res_path = f'Reservations/{date_lst[1]}-{date_lst[2]}-{date_lst[3]}.csv'
+
+        if os.path.isfile(res_path):
+            lines = []
+            with open(res_path, 'r') as csvfile:
+                content = csv.reader(csvfile,delimiter =',')
+                for line in content:
+                    if line[0] == input_name and line[1] == input_size and line[2] == input_time:
+                        new_entry = [new_name, new_size, new_time, new_time, new_phone]
+                        lines.append(new_entry)
+                    else:
+                        lines.append(line)
+
+            with open(res_path, 'w', newline='') as csvfile:
+                content = csv.writer(csvfile)
+                for line in lines:
+                    content.writerow(line)
+            self.grab_date_edit_res()
+            #self.edit_name.setText('')
+            #self.edit_size.setText('')
+            #self.edit_time.setText('')
                 
