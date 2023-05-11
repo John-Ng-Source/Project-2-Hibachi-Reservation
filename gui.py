@@ -96,10 +96,10 @@ class Ui_MainWindow(object):
         self.label_17.setText("")
         self.label_17.setObjectName("label_17")
         self.avail_tables = QtWidgets.QLabel(self.tab_3)
-        self.avail_tables.setGeometry(QtCore.QRect(170, 210, 151, 16))
+        self.avail_tables.setGeometry(QtCore.QRect(170, 210, 171, 16))
         self.avail_tables.setObjectName("avail_tables")
         self.avail_seats = QtWidgets.QLabel(self.tab_3)
-        self.avail_seats.setGeometry(QtCore.QRect(10, 210, 81, 16))
+        self.avail_seats.setGeometry(QtCore.QRect(10, 210, 100, 16))
         self.avail_seats.setObjectName("avail_seats")
         self.new_res_lst = QtWidgets.QListWidget(self.tab_3)
         self.new_res_lst.setGeometry(QtCore.QRect(360, 190, 301, 251))
@@ -146,6 +146,10 @@ class Ui_MainWindow(object):
         self.rad_530.setGeometry(QtCore.QRect(250, 110, 80, 18))
         self.rad_530.setObjectName("rad_530")
         self.buttonGroup.addButton(self.rad_530)
+        self.new_res_button = QtWidgets.QPushButton(self.tab_3)
+        self.new_res_button.setGeometry(QtCore.QRect(100, 350, 75, 23))
+        self.new_res_button.setObjectName("new_res_button")
+
         self.tabWidget.addTab(self.tab_3, "")
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
@@ -248,6 +252,7 @@ class Ui_MainWindow(object):
         self.label_15.setText(_translate("MainWindow", "Party Size"))
         self.avail_tables.setText(_translate("MainWindow", "Available Tables:"))
         self.avail_seats.setText(_translate("MainWindow", "Available Seats:"))
+
         self.rad_400.setText(_translate("MainWindow", "4:00 PM"))
         self.rad_430.setText(_translate("MainWindow", "4:30 PM"))
         self.rad_500.setText(_translate("MainWindow", "5:00 PM"))
@@ -258,6 +263,8 @@ class Ui_MainWindow(object):
         self.rad_800.setText(_translate("MainWindow", "8:00 PM"))
         self.rad_830.setText(_translate("MainWindow", "8:30 PM"))
         self.rad_530.setText(_translate("MainWindow", "5:30 PM"))
+        self.new_res_button.setText(_translate("MainWindow", "RESERVE"))
+
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "New Reservation"))
         self.edit_del_button.setText(_translate("MainWindow", "DELETE"))
         self.edit_set_button.setText(_translate("MainWindow", "SET"))
@@ -278,8 +285,17 @@ class Ui_MainWindow(object):
             with open(current_res_file_path, 'r') as csvfile:
                 content = csv.reader(csvfile,delimiter =',')
                 for line in content:
-                    entry = f'{line[0]}  -  Party Size: {line[1]}  -  Time: {line[2]}'
-                    self.curr_res_lst.addItem(entry)
+                    if len(line) < 4:
+                        entry = f'{line[0]}  -  Party Size: {line[1]}  -  Time: {line[2]}'
+                        self.curr_res_lst.addItem(entry)
+                        self.new_res_lst.addItem(entry)
+                    else:
+                        entry = f'{line[0]}  -  Party Size: {line[1]}  -  Time: {line[2]}  -  {line[3]}'
+                        self.curr_res_lst.addItem(entry)
+                        self.new_res_lst.addItem(entry)
+
+        
+
 
 if __name__ == "__main__":
     import sys
