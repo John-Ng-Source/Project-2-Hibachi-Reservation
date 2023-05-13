@@ -8,18 +8,17 @@ QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
 
 
 current_res_file_path = f'Reservations/{date_string}.csv'
+time_slots = ['4:00', '4:30','5:00', '5:30','6:00', '6:30','7:00', '7:30','8:00', '8:30']
 
 class Controller(QMainWindow, Ui_MainWindow):
 
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.setupUi(self)
-
         self.new_calender.selectionChanged.connect(self.grab_date_new_res)
         self.edit_calender.selectionChanged.connect(self.grab_date_edit_res)
         self.check_in_button.clicked.connect(lambda: self.current_res_checkin)
         self.curr_res_lst.itemDoubleClicked.connect(self.alt_current_res_checkin)
-
         self.rad_400.clicked.connect(self.disp_res_aval_400)
         self.rad_430.clicked.connect(self.disp_res_aval_430)
         self.rad_500.clicked.connect(self.disp_res_aval_500)
@@ -45,7 +44,6 @@ class Controller(QMainWindow, Ui_MainWindow):
             res_path = f'Reservations/{date_lst[1]}-{str(0)+ date_lst[2]}-{date_lst[3]}.csv'
         else:
             res_path = f'Reservations/{date_lst[1]}-{date_lst[2]}-{date_lst[3]}.csv'
-            print(res_path)
             
         
         if os.path.isfile(res_path):
@@ -65,10 +63,8 @@ class Controller(QMainWindow, Ui_MainWindow):
         date_lst = date.split(' ')
         if int(date_lst[2]) < 10:
             res_path = f'Reservations/{date_lst[1]}-{str(0)+ date_lst[2]}-{date_lst[3]}.csv'
-            print(res_path)
         else:
             res_path = f'Reservations/{date_lst[1]}-{date_lst[2]}-{date_lst[3]}.csv'
-            print(res_path)
         
         if os.path.isfile(res_path):
             with open(res_path, 'r') as csvfile:
@@ -132,7 +128,7 @@ class Controller(QMainWindow, Ui_MainWindow):
                 for line in content:
                     if line[2] == '4:00':
                         four_00.aval_seats -= int(line[1])
-                print(four_00.aval_seats)
+                
 
             if four_00.aval_seats > 48:
                 four_00.aval_tables = 5
@@ -225,7 +221,7 @@ class Controller(QMainWindow, Ui_MainWindow):
 
         self.avail_seats.setText(f'Available Seats: {int(five_00.aval_seats)}')
         self.avail_tables.setText(f'Available Tables: {int(five_00.aval_tables)}')
-        return int(five_00.aval_tables)    
+        return int(five_00.aval_seats)    
 
     def disp_res_aval_530(self):
         five_30 = Reservation()
@@ -415,7 +411,7 @@ class Controller(QMainWindow, Ui_MainWindow):
 
         self.avail_seats.setText(f'Available Seats: {int(seven_30.aval_seats)}')
         self.avail_tables.setText(f'Available Tables: {int(seven_30.aval_tables)}')
-        return int(seven_30.aval_tables)    
+        return int(seven_30.aval_seats)    
 
     def disp_res_aval_800(self):
         eight_00 = Reservation()
@@ -453,7 +449,7 @@ class Controller(QMainWindow, Ui_MainWindow):
 
         self.avail_seats.setText(f'Available Seats: {int(eight_00.aval_seats)}')
         self.avail_tables.setText(f'Available Tables: {int(eight_00.aval_tables)}')
-        return int(eight_00.aval_tables)    
+        return int(eight_00.aval_seats)    
 
     def disp_res_aval_830(self):
         eight_30 = Reservation()
@@ -493,10 +489,9 @@ class Controller(QMainWindow, Ui_MainWindow):
         self.avail_tables.setText(f'Available Tables: {int(eight_30.aval_tables)}')
         return int(eight_30.aval_seats)    
 
+    res_functions = [disp_res_aval_400, disp_res_aval_430, disp_res_aval_500, disp_res_aval_530, disp_res_aval_600, disp_res_aval_630, disp_res_aval_700, disp_res_aval_730, disp_res_aval_800, disp_res_aval_830]
 
     def set_new_res(self):
-        print('Hello World')
-        print('Test1')
         input_name = self.new_name.text().strip()
         input_phone = int(self.new_number.text().strip())
         input_size = int(self.new_size.text().strip())
@@ -516,7 +511,7 @@ class Controller(QMainWindow, Ui_MainWindow):
             if self.rad_400.isChecked() == True:
                 aval_seats = self.disp_res_aval_400()
                 if input_size > aval_seats:
-                    print('Party Size > Current Available Seating')
+                    self.new_res_output_label.setText('Party Size > Current Available Seating')
                 else:
                     with open(res_path, 'a', newline='') as csvfile:
                         content = csv.writer(csvfile)
@@ -528,7 +523,7 @@ class Controller(QMainWindow, Ui_MainWindow):
             elif self.rad_430.isChecked() == True:
                 aval_seats = self.disp_res_aval_430()
                 if input_size > aval_seats:
-                    print('Party Size > Current Available Seating')
+                    self.new_res_output_label.setText('Party Size > Current Available Seating')
                 else:
                     with open(res_path, 'a', newline='') as csvfile:
                         content = csv.writer(csvfile)
@@ -539,7 +534,7 @@ class Controller(QMainWindow, Ui_MainWindow):
             elif self.rad_500.isChecked() == True:
                 aval_seats = self.disp_res_aval_500()
                 if input_size > aval_seats:
-                    print('Party Size > Current Available Seating')
+                    self.new_res_output_label.setText('Party Size > Current Available Seating')
                 else:
                     with open(res_path, 'a', newline='') as csvfile:
                         content = csv.writer(csvfile)
@@ -551,7 +546,7 @@ class Controller(QMainWindow, Ui_MainWindow):
             elif self.rad_530.isChecked() == True:
                 aval_seats = self.disp_res_aval_530()
                 if input_size > aval_seats:
-                    print('Party Size > Current Available Seating')
+                    self.new_res_output_label.setText('Party Size > Current Available Seating')
                 else:
                     with open(res_path, 'a', newline='') as csvfile:
                         content = csv.writer(csvfile)
@@ -563,7 +558,7 @@ class Controller(QMainWindow, Ui_MainWindow):
             elif self.rad_600.isChecked() == True:
                 aval_seats = self.disp_res_aval_600()
                 if input_size > aval_seats:
-                    print('Party Size > Current Available Seating')
+                    self.new_res_output_label.setText('Party Size > Current Available Seating')
                 else:
                     with open(res_path, 'a', newline='') as csvfile:
                         content = csv.writer(csvfile)
@@ -576,7 +571,7 @@ class Controller(QMainWindow, Ui_MainWindow):
             elif self.rad_630.isChecked() == True:
                 aval_seats = self.disp_res_aval_630()
                 if input_size > aval_seats:
-                    print('Party Size > Current Available Seating')
+                    self.new_res_output_label.setText('Party Size > Current Available Seating')
                 else:
                     with open(res_path, 'a', newline='') as csvfile:
                         content = csv.writer(csvfile)
@@ -588,7 +583,7 @@ class Controller(QMainWindow, Ui_MainWindow):
             elif self.rad_700.isChecked() == True:
                 aval_seats = self.disp_res_aval_700()
                 if input_size > aval_seats:
-                    print('Party Size > Current Available Seating')
+                    self.new_res_output_label.setText('Party Size > Current Available Seating')
                 else:
                     with open(res_path, 'a', newline='') as csvfile:
                         content = csv.writer(csvfile)
@@ -600,7 +595,7 @@ class Controller(QMainWindow, Ui_MainWindow):
             elif self.rad_730.isChecked() == True:
                 aval_seats = self.disp_res_aval_730()
                 if input_size > aval_seats:
-                    print('Party Size > Current Available Seating')
+                    self.new_res_output_label.setText('Party Size > Current Available Seating')
                 else:
                     with open(res_path, 'a', newline='') as csvfile:
                         content = csv.writer(csvfile)
@@ -613,7 +608,7 @@ class Controller(QMainWindow, Ui_MainWindow):
             elif self.rad_800.isChecked() == True:
                 aval_seats = self.disp_res_aval_800()
                 if input_size > aval_seats:
-                    print('Party Size > Current Available Seating')
+                    self.new_res_output_label.setText('Party Size > Current Available Seating')
                 else:
                     with open(res_path, 'a', newline='') as csvfile:
                         content = csv.writer(csvfile)
@@ -625,7 +620,7 @@ class Controller(QMainWindow, Ui_MainWindow):
             elif self.rad_830.isChecked() == True:
                 aval_seats = self.disp_res_aval_830()
                 if input_size > aval_seats:
-                    print('Party Size > Current Available Seating')
+                    self.new_res_output_label.setText('Party Size > Current Available Seating')
                 else:
                     with open(res_path, 'a', newline='') as csvfile:
                         content = csv.writer(csvfile)
@@ -634,7 +629,7 @@ class Controller(QMainWindow, Ui_MainWindow):
                     self.disp_res_aval_830()
                     self.grab_date_new_res()
             else:
-                print('Please Select A Time Slot.')
+                self.new_res_output_label.setText('Please Select A Time Slot.')
 
         else:
             radios = [self.rad_400, self.rad_430, self.rad_500, self.rad_530, self.rad_600, self.rad_630, self.rad_700, self.rad_730, self.rad_800, self.rad_830]
@@ -645,82 +640,165 @@ class Controller(QMainWindow, Ui_MainWindow):
                         entry = [input_name, input_size, '8:30',input_phone]
                         content.writerow(entry)
                     self.grab_date_new_res()
-                    print('Success!')
                     break
-                print('Please Select A Time Slot.')
+                self.new_res_output_label.setText('Please Select A Time Slot.')
 
     def del_res(self):
-        input_name = self.edit_name.text().strip()
-        input_size = self.edit_size.text().strip()
-        input_phone = self.edit_phone.text().strip()
-        input_time = self.edit_time.text().strip()
+        try:
+            self.edit_output_label.setText('')
+            input_name = self.edit_name.text().strip()
+            input_size = self.edit_size.text().strip()
+            input_phone = self.edit_phone.text().strip()
+            input_time = self.edit_time.text().strip()   
+            date_selected = self.edit_calender.selectedDate()
 
-        date_selected = self.edit_calender.selectedDate()
-        date = str(date_selected.toString())
-        date_lst = date.split(' ')
-        if int(date_lst[2]) < 10:
-            res_path = f'Reservations/{date_lst[1]}-{str(0)+ date_lst[2]}-{date_lst[3]}.csv'
-            #print(res_path)
-        else:
-            res_path = f'Reservations/{date_lst[1]}-{date_lst[2]}-{date_lst[3]}.csv'
+            error_catch_size = int(input_size)
 
-        if os.path.isfile(res_path):
-            lines = []
-            with open(res_path, 'r') as csvfile:
-                content = csv.reader(csvfile,delimiter =',')
-                for line in content:
-                    if line[0] == input_name and line[1] == input_size and line[2] == input_time:
-                        continue
-                    else:
-                        lines.append(line)
+            if (len(input_name) == 0):
+                raise RuntimeError
+            if input_time not in time_slots:
+                raise IndexError
+            if  (0 < len(input_phone) < 10):
+                raise ValueError
+            elif (len(input_phone) > 10):
+                raise ValueError
+            
+            
 
-            with open(res_path, 'w', newline='') as csvfile:
-                content = csv.writer(csvfile)
-                for line in lines:
-                    content.writerow(line)
-            self.grab_date_edit_res()
-            self.edit_name.setText('')
-            self.edit_size.setText('')
-            self.edit_time.setText('')
-                        
+            date = str(date_selected.toString())
+            date_lst = date.split(' ')
+            if int(date_lst[2]) < 10:
+                res_path = f'Reservations/{date_lst[1]}-{str(0) + date_lst[2]}-{date_lst[3]}.csv'
+                #print(res_path)
+            else:
+                res_path = f'Reservations/{date_lst[1]}-{date_lst[2]}-{date_lst[3]}.csv'        
+            if os.path.isfile(res_path):
+                lines = []
+                with open(res_path, 'r') as csvfile:
+                    content = csv.reader(csvfile,delimiter =',')
+                    for line in content:
+                        if line[0] == input_name and line[1] == input_size and line[2] == input_time:
+                            self.edit_output_label.setText('Reservation Successfully Deleted')
+                            continue
+                        else:
+                            lines.append(line)
+                
+                with open(res_path, 'w', newline='') as csvfile:
+                    content = csv.writer(csvfile)
+                    for line in lines:
+                        content.writerow(line)
+                self.grab_date_edit_res()
+                self.edit_name.setText('')
+                self.edit_size.setText('')
+                self.edit_time.setText('')
+                self.edit_phone.setText('')
+            
+        
+        except RuntimeError:
+            self.edit_output_label.setText('Please Fill In Name * Field.')
+        except ValueError:
+            self.edit_output_label.setText('Please Enter (10) or (ZERO) Digit Phone Number for Phone Number Field. Please Enter Numbers for Party Size.')
+        except IndexError:
+            self.edit_output_label.setText('Please Enter Valid Time Slot (4:00 PM ---> 8:30 PM), in 30 min incraments.')
+        except TypeError:
+            self.edit_output_label.setText('Reservation Does Not Exist.')
 
     def set_res(self):
-        input_name = self.edit_name.text().strip()
-        input_size = self.edit_size.text().strip()
-        input_phone = self.edit_phone.text().strip()
-        input_time = self.edit_time.text().strip()
+        try:           
+            input_name = self.edit_name.text().strip()
+            input_size = self.edit_size.text().strip()
+            input_phone = self.edit_phone.text().strip()
+            input_time = self.edit_time.text().strip()
 
-        new_name = self.edit_new_name.text().strip()
-        new_size = self.edit_new_size.text().strip()
-        new_time = self.edit_new_time.text().strip()
-        new_phone = self.edit_new_number.text().strip()
+            new_name = self.edit_new_name.text().strip()
+            new_size = self.edit_new_size.text().strip()
+            new_time = self.edit_new_time.text().strip()
+            new_phone = self.edit_new_number.text().strip()
 
-        date_selected = self.edit_calender.selectedDate()
-        date = str(date_selected.toString())
-        date_lst = date.split(' ')
-        if int(date_lst[2]) < 10:
-            res_path = f'Reservations/{date_lst[1]}-{str(0)+ date_lst[2]}-{date_lst[3]}.csv'
-            #print(res_path)
-        else:
-            res_path = f'Reservations/{date_lst[1]}-{date_lst[2]}-{date_lst[3]}.csv'
+            error_catch_size = int(input_size)
+            error_catch_phone = int(input_size)
+            error_catch_size2 = int(new_size)
+            
+            if (len(input_name) == 0) or (len(new_name) == 0):
+                raise KeyError
 
-        if os.path.isfile(res_path):
-            lines = []
-            with open(res_path, 'r') as csvfile:
-                content = csv.reader(csvfile,delimiter =',')
-                for line in content:
-                    if line[0] == input_name and line[1] == input_size and line[2] == input_time:
-                        new_entry = [new_name, new_size, new_time, new_time, new_phone]
-                        lines.append(new_entry)
-                    else:
-                        lines.append(line)
+            if  (0 < len(input_phone) < 10):
+                raise TypeError
+            elif (len(input_phone) > 10):
+                raise TypeError
 
-            with open(res_path, 'w', newline='') as csvfile:
-                content = csv.writer(csvfile)
-                for line in lines:
-                    content.writerow(line)
-            self.grab_date_edit_res()
-            #self.edit_name.setText('')
-            #self.edit_size.setText('')
-            #self.edit_time.setText('')
+            if  (0 < len(new_phone) < 10):
+                raise TypeError
+            elif (len(new_phone) > 10):
+                raise TypeError
+
+            if input_time not in time_slots or (new_time not in time_slots):
+                raise IndexError
+            
+            
+
+            date_selected = self.edit_calender.selectedDate()
+            date = str(date_selected.toString())
+            date_lst = date.split(' ')
+            if int(date_lst[2]) < 10:
+                res_path = f'Reservations/{date_lst[1]}-{str(0)+ date_lst[2]}-{date_lst[3]}.csv'
+                #print(res_path)
+            else:
+                res_path = f'Reservations/{date_lst[1]}-{date_lst[2]}-{date_lst[3]}.csv'
+
+            if os.path.isfile(res_path):
                 
+                lines = []
+                with open(res_path, 'r') as csvfile:
+                    content = csv.reader(csvfile,delimiter =',')
+                    for line in content:
+                        if line[0] == input_name and line[1] == input_size and line[2] == input_time:    
+                            if new_time in time_slots:
+                                if new_time == input_time:
+                                    item_index = time_slots.index(new_time)
+                                    new_difference = int(input_size) - int(new_size)
+                                    print(self.res_functions[item_index](self))
+                                    if (self.res_functions[item_index](self) + new_difference) < 0:
+                                        raise RuntimeError(f'{self.res_functions[item_index](self)}')
+                                    else:
+                                        new_entry = [new_name, new_size, new_time, new_phone]
+                                        lines.append(new_entry)
+                                else:
+                                    new_item_index = time_slots.index(new_time)
+                                    if self.res_functions[new_item_index](self) < int(new_size):
+                                        raise RuntimeError(f'{self.res_functions[new_item_index](self)}')    
+                                    else:
+                                        new_entry = [new_name, new_size, new_time, new_phone]
+                                        lines.append(new_entry)                      
+                        else:
+                            lines.append(line)      
+                with open(res_path, 'w', newline='') as csvfile:
+                    content = csv.writer(csvfile)
+                    for line in lines:
+                        content.writerow(line)
+                self.grab_date_edit_res()
+                self.edit_name.setText('')
+                self.edit_size.setText('')
+                self.edit_time.setText('')
+                self.edit_phone.setText('')
+                self.edit_new_name.setText('')
+                self.edit_new_number.setText('')
+                self.edit_new_size.setText('')
+                self.edit_new_time.setText('')
+                self.edit_new_number.setText('')
+
+        except TypeError:
+            self.edit_output_label.setText('Please Enter a (10) Digit Phone Number Phone Numbers OR NO PHONE NUMBER.')
+        except IndexError:
+            self.edit_output_label.setText('Please Enter Valid Time Slot (4:00 PM ---> 8:30 PM), in 30 min incraments.')
+
+        except RuntimeError as e:
+            self.edit_output_label.setText(f'Time Slot Currently has {e} Available Seats. Not Enough Space.')   
+        
+        except KeyError:
+            self.edit_output_label.setText(f'Please Fill In All Name Fields.')
+        
+        except ValueError:
+            self.edit_output_label.setText(f'Please Enter Numbers for (Party Size) Fields.')
+
+
